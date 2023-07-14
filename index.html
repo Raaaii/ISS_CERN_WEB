@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="title-box">
+      <h1>ISS ISOLDE Toolkit</h1>
+    </div>
+    <div class="particle-section">
+      <div class="dropdown">
+        <button class="dropdown-button">Choose particles</button>
+        <div class="dropdown-content">
+          <a href="#" onclick="selectParticle('Particle 1')">Particle 1</a>
+          <a href="#" onclick="selectParticle('Particle 2')">Particle 2</a>
+          <a href="#" onclick="selectParticle('Particle 3')">Particle 3</a>
+        </div>
+      </div>
+      <div id="particle-fields">
+      </div>
+      <button class="start-button">Start</button>
+    </div>
+    <div id="popup" class="popup"></div>
+    <div id="overlay" class="overlay"></div>
+  </div>
+  
+  <script src="script.js"></script>
+  
+</body>
+</html>
