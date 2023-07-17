@@ -67,47 +67,53 @@ startButton.addEventListener("click", () => {
 
 
 function retrieveDataAndCalculateMassExcess(particleValues) {
-  fetch("https://localhost:8080/retrive_data")
+  // Create the overlay and popup elements first
+  const overlay = document.getElementById("overlay");
+  const popup = document.getElementById("popup");
+  popup.innerHTML = ""; // Clear any previous content
+
+  fetch("http://localhost:5000/calculate_mass_excess", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(particleValues),
+  })
     .then(response => response.json())
-    .then(data => {
-      const df = JSON.parse(data);
-      const massExcessValues = getMassExcessValues(df, particleValues);
-
-      const popup = document.createElement("div");
-      popup.classList.add("popup");
-
+    .then(massExcessValues => {
       const closeButton = document.createElement("span");
       closeButton.classList.add("close-button");
       closeButton.textContent = "x";
       closeButton.addEventListener("click", () => {
-        document.body.removeChild(overlay);
-        document.body.removeChild(popup);
+        overlay.style.display = "none";
+        popup.style.display = "none";
       });
 
       const content = document.createElement("div");
       content.classList.add("popup-content");
-      content.innerHTML = `
-        <h2>Mass Excess Values</h2>
-        <ul>
-          ${massExcessValues
-            .map(
-              ({ particle, massExcess }) =>
-                `<li>${particle}: ${massExcess}</li>`
-            )
-            .join("")}
-        </ul>
-      `;
+
+      Object.keys(massExcessValues).forEach(particle => {
+        const particleResult = document.createElement("div");
+        particleResult.classList.add("particle-result");
+
+        const particleName = document.createElement("h3");
+        particleName.textContent = particle;
+
+        const massExcessValue = document.createElement("p");
+        massExcessValue.textContent = `Mass Excess: ${massExcessValues[particle]}`;
+
+        particleResult.appendChild(particleName);
+        particleResult.appendChild(massExcessValue);
+        content.appendChild(particleResult);
+      });
 
       popup.appendChild(closeButton);
       popup.appendChild(content);
 
-      const overlay = document.createElement("div");
-      overlay.classList.add("overlay");
-
-      document.body.appendChild(overlay);
-      overlay.appendChild(popup);
+      overlay.style.display = "block";
+      popup.style.display = "block";
     })
     .catch(error => {
-      console.error("An error occurred:", error);
+      console.error("Error:", error);
     });
 }

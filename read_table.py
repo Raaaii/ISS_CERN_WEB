@@ -1,13 +1,19 @@
 import urllib.request
 import re
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import pandas as pd
-
+from flask_cors import CORS
 
 app = Flask(__name__)
-@app.route('/retrive_data', methods=['GET'])
+CORS(app)
 
+
+# Define df and extract_mass_excess at the global level
+df = None
+
+@app.route('/retrive_data', methods=['GET'])
 def read_data():
+    global df
     df = read_table()
     result = df.to_json(orient="list")
     return jsonify(result)
@@ -41,3 +47,28 @@ def read_table():
     }
     df = pd.DataFrame(data)
     return df
+
+def extract_mass_excess(df, A, N):
+    mass_excess = df.loc[(df['A'] == A) & (df['N'] == N), 'Mass Excess'].values[0]
+    return mass_excess
+
+@app.route('/calculate_mass_excess', methods=['POST'])
+
+
+def calculate_mass_excess():
+    data = request.get_json()
+    mass_excess_values = {}
+
+    for particle in data:
+        A = int(particle['a'])
+        N = int(particle['z'])
+        mass_excess = extract_mass_excess(df, A, N)
+        mass_excess_values[particle['particle']] = mass_excess
+
+    return jsonify(mass_excess_values)
+
+if __name__ == '__main__':
+    app.run(host='localhost', port=5000, debug=True)
+    #check if the server is running
+    print("Server is running!")
+
