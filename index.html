@@ -17,6 +17,7 @@
 
     .popup {
       position: fixed;
+      display: none;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -60,6 +61,12 @@
       font-size: 14px;
       color: #c71a1a;
     }
+    #masses {
+      display: none;
+    }
+    #v3Container {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -80,13 +87,39 @@
       </div>
       <button class="start-button">Start</button>
     </div>
+
+    <div class="masses" id="masses">
+      <label for="particle1">Particle 1</label>
+      <input type="text" id="particle1" disabled>
+      <br>
+      <label for="particle2">Particle 2</label>
+      <input type="text" id="particle2" disabled>
+      <br>
+      <label for="particle3">Particle 3</label>
+      <input type="text" id="particle3" disabled>
+      <br>
+      <label for="E_x">E_x</label>
+      <input type="number" id="E_x">
+      <br>
+      <label for="T_i">T_i</label>
+      <input type="text" id="T_i">
+      <br>
+      <p id="v3Container"><i>V3 = </i><b id="v3"></b></p>
+      <button onclick="calculateV3()">CALCULATE V3</button>
+    </div>
+
   </div>
+
+
+
 
   <!-- Pop-up window and overlay elements -->
   <div id="overlay" class="overlay"></div>
   <div id="popup" class="popup"></div>
 
-  
+  <script src="data.js"></script>
   <script src="script.js"></script>
+  <script src="v3.js"></script>
+
 </body>
 </html>
