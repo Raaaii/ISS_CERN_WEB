@@ -1,4 +1,8 @@
 let selectedParticles = [];
+// let masses = [];
+let massesDiv = document.querySelector("#masses");
+// let v3;
+
 function selectParticle(particle) {
   const particleFields = document.getElementById("particle-fields");
   const particleNumber = selectedParticles.length + 1;
@@ -66,6 +70,13 @@ startButton.addEventListener("click", () => {
 });
 
 
+function showMasses(){
+  console.log(masses)
+}
+
+
+
+
 function retrieveDataAndCalculateMassExcess(particleValues) {
   // Create the overlay and popup elements first
   const overlay = document.getElementById("overlay");
@@ -82,6 +93,7 @@ function retrieveDataAndCalculateMassExcess(particleValues) {
     .then(response => response.json())
     .then(massExcessValues => {
       const closeButton = document.createElement("span");
+      masses = massExcessValues;
       closeButton.classList.add("close-button");
       closeButton.textContent = "x";
       closeButton.addEventListener("click", () => {
@@ -106,6 +118,11 @@ function retrieveDataAndCalculateMassExcess(particleValues) {
         particleResult.appendChild(massExcessValue);
         content.appendChild(particleResult);
       });
+
+      massesDiv.style.display = 'block';
+      mass1 = document.querySelector('#particle1').value = masses['Particle 1']
+      mass2 = document.querySelector('#particle2').value = masses['Particle 2']
+      mass3 = document.querySelector('#particle3').value = masses['Particle 3']
 
       popup.appendChild(closeButton);
       popup.appendChild(content);
