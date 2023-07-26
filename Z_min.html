@@ -2,12 +2,12 @@
 <html>
 <head>
     <title>Optimal Theta Calculator</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='z_min.css') }}">
+    <link rel="stylesheet" type="text/css" href="z_min.css"> 
 </head>
 <body>
     <div class="container">
         <h1>Optimal Theta Calculator</h1>
-        <form action="/calculate" method="POST">
+        <form id="thetaForm" method="POST">
             <label for="ro_meas">Ro Meas:</label>
             <input type="number" step="0.01" name="ro_meas" required>
             <label for="v_3">V3:</label>
