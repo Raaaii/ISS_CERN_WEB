@@ -12,93 +12,10 @@ CORS(app)
 # Define df and extract_mass_excess at the global level
 df = None
 
-# @app.route('/retrive_data', methods=['POST'])
-# def read_data():
-#     global df
-#     df = read_table()
-#     result = df.to_json(orient="list")
-#     return jsonify(result)
-
-def read_table():
-    url = "https://www.anl.gov/sites/www/files/2021-05/mass_1.mas20.txt"
-    response = urllib.request.urlopen(url)
-    data = response.read().decode("utf-8")
-    lines = data.splitlines()[36:]
-    columns_with_numbers = []
-    N_values = []
-    A_values = []
-    mass_excess_values = []
-    for line in lines:
-        if not line.strip():
-            continue
-        
-        if line.startswith('0'):
-            line = line[1:]
-        
-        columns = re.findall(r"[-+]?[\d.]+(?:[eE][-+]?\d+)?", line)
-        columns_with_numbers.append([float(column) for column in columns])
-        A_values.append(int(columns[3]))
-        N_values.append(int(columns[2]))
-        mass_excess_values.append(float(columns[4]))
-
-    data = {
-        'A': A_values,
-        'N': N_values,
-        'Mass Excess': mass_excess_values,
-    }
-    df = pd.DataFrame(data)
-    return df
-
-def extract_mass_excess(df, A, N):
-    df = read_table()
-    
-    filtered_df = df.loc[(df['A'] == A) & (df['N'] == N), 'Mass Excess']
-    
-    if filtered_df.empty:
-        return None  # or some other placeholder/error message
-    
-    return filtered_df.values[0]
-
-
-@app.route('/calculate_mass_excess', methods=['POST'])
-
-
-def calculate_mass_excess():
-    data = request.get_json()
-    mass_excess_values = {}
-
-    print(data)
-
-    for particle in data:
-        A = int(particle['a'])
-        N = int(particle['z'])
-        mass_excess = extract_mass_excess(df, A, N)
-        
-        # Handle potential None value
-        if mass_excess is None:
-            mass_excess_values[particle['particle']] = "Data not found"
-        else:
-            mass_excess_values[particle['particle']] = mass_excess
-
-    return jsonify(mass_excess_values)
-
-
-@app.route('/calculate_v3', methods=['POST'])
-def doCalculations():
-    data = request.get_json()
-
-    result = calculate_v3(
-        m1=data['mass1'], 
-        m2=data['mass2'], 
-        m3=data['mass3'], 
-        E_x=data['E_x'], 
-        T_i=data['T_i']
-        )
-    return jsonify(result)
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='localhost', port=5500, debug=True)
     #check if the server is running
     print("Server is running!")
 

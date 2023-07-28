@@ -123,7 +123,6 @@
     z-index: 9998;
   }
 
-  /* Rest of your CSS styles ... */
 
 .particle-result {
   background-color: #f9f9f9;
@@ -144,4 +143,76 @@
   color: #666666;
 }
 
+
+
+    /* Styles for the particle section */
+
+    .particle-result {
+      background-color: blueviolet;
+      border: 1px solid black;
+      padding: 10px;
+      margin-top: 10px;
+    
+    }
+
+    .particle-result h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #333333;
+    }
+
+    .particle-result p {
+      margin: 0;
+      font-size: 14px;
+      color: #c71a1a;
+    }
   
+    #masses {
+      display: none;
+    }
+    #v3Container {
+      display: none;
+    }
+
+.masses {
+  background-color: #dbf1db;
+  border: 1px solid #c2c2c2;
+  padding: 10px;
+  margin-top: 20px;
+  display: inline-block; /* Add this line to make it inline with the previous section */
+  vertical-align: top; /* Add this line to align it at the top */
+  margin-left: 20px; /* Add this line to add some space between the sections */
+}
+
+.masses label {
+  margin-right: 5px;
+}
+
+.masses input {
+  width: 50px;
+  padding: 5px;
+  border: 1px solid #c2c2c2;
+}
+
+.masses #v3Container {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.masses #v3 {
+  color: #c71a1a;
+}
+
+.masses button {
+  background-color: #4CAF50;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.masses button:hover {
+  background-color: #45a049;
+}
