@@ -3,7 +3,7 @@ import re
 from flask import Flask, jsonify, request
 import pandas as pd
 from flask_cors import CORS
-from calculate_mass_excess import calculate_mass_excess
+from calculate_mass_excess import calculate_nuclear_mass
 from calculate_mass_excess import calculate_v3
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ CORS(app)
 #APP ROUTE FOR MASS EXCESS CALCULATION
 @app.route('/calculate_mass_excess', methods=['POST'])
 def doCalculations():
-    return calculate_mass_excess()
+    return calculate_nuclear_mass()
 
 
 
@@ -27,7 +27,7 @@ def doCalculationsforV3():
         m2=data['mass2'], 
         m3=data['mass3'], 
         E_x=data['E_x'], 
-        T_i=data['T_i']
+        T_1=data['T_1']
         )
     return jsonify(result)
 

@@ -9,7 +9,7 @@ function calculateV3(){
         mass2: masses['Particle 2'],
         mass3: masses['Particle 3'],
         E_x: document.querySelector("#E_x").value,
-        T_i: document.querySelector("#T_i").value,
+        T_1: document.querySelector("#T_1").value,
       })
     }).then(response => response.json())
     .then(res => {

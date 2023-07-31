@@ -8,8 +8,9 @@ import math
 app = Flask(__name__)
 CORS(app)
 
-
-
+# Constants for neutron and proton masses in MeV/c^2
+neutron_mass_MeV = 939.565
+proton_mass_MeV = 938.272
 
 
 #READING THE TABLE FROM THE WEBSITE
@@ -22,6 +23,8 @@ def read_table():
     N_values = []
     A_values = []
     mass_excess_values = []
+    Z_values = []
+    nuclear_mass = []
     for line in lines:
         if not line.strip():
             continue
@@ -31,30 +34,30 @@ def read_table():
         
         columns = re.findall(r"[-+]?[\d.]+(?:[eE][-+]?\d+)?", line)
         columns_with_numbers.append([float(column) for column in columns])
+        N_values.append(int(columns[1]))
+        Z_values.append(int(columns[2]))
         A_values.append(int(columns[3]))
-        N_values.append(int(columns[2]))
         mass_excess_values.append(float(columns[4]))
-        
+        nuclear_mass_value = Z_values[-1] * proton_mass_MeV + N_values[-1] * neutron_mass_MeV + mass_excess_values[-1]
+        nuclear_mass.append(nuclear_mass_value)
 
     data = {
         'A': A_values,
         'N': N_values,
         'Mass Excess': mass_excess_values,
+        'Z': Z_values,
+        'Nuclear Mass': nuclear_mass
     }
     df = pd.DataFrame(data)
     return df
 
 
-
-
-
 df = read_table()
 
-#EXTRACTING THE MASS EXCESS VALUES FROM THE TABLE
+#EXTRACTING THE NUCLEAR MASS VALUES FROM THE TABLE
 
-def extract_mass_excess(df, A, N):
-    
-    filtered_df = df.loc[(df['A'] == A) & (df['N'] == N), 'Mass Excess']
+def extract_nuclear_mass(df, N, Z):
+    filtered_df = df.loc[(df['A'] == Z) & (df['N'] == N), 'Nuclear Mass']
     
     if filtered_df.empty:
         return None  # or some other placeholder/error message
@@ -62,42 +65,38 @@ def extract_mass_excess(df, A, N):
     return filtered_df.values[0]
 
 
+#CALCULATE THE NUCLEAR MASS VALUES
 
-#CALCUATE THE MASS EXCESS VALUES
-
-def calculate_mass_excess():
+def calculate_nuclear_mass():
     data = request.get_json()
-    mass_excess_values = {}
+    nuclear_mass_values = {}
 
     print(data)
 
     for particle in data:
         A = int(particle['a'])
         N = int(particle['z'])
-        mass_excess = extract_mass_excess(df, A, N)
+        nuclear_mass = extract_nuclear_mass(df, A, N)
         
         # Handle potential None value
-        if mass_excess is None:
-            mass_excess_values[particle['particle']] = "Data not found"
+        if nuclear_mass is None:
+            nuclear_mass_values[particle['particle']] = "Data not found"
         else:
-            mass_excess_values[particle['particle']] = mass_excess
+            nuclear_mass_values[particle['particle']] = nuclear_mass
 
-    return jsonify(mass_excess_values)
-
-
+    return jsonify(nuclear_mass_values)
 
 
-def calculate_v3(m1, m2, m3, E_x, T_i):
+def calculate_v3(m1, m2, m3, E_x, T_1):
     m1 = float(m1)
     m2 = float(m2)
     m3 = float(m3)
     E_x = int(E_x)
-    T_i = int(T_i)
-    print("DATA: ",m1,m2,m3,E_x, T_i)
-    T_1 = (m2 / (m1 + m2)) * T_i
+    T_1 = int(T_1)
+    print("DATA: ", m1, m2, m3, E_x, T_1)
+    T_i = (m2 / (m1 + m2)) * T_1
     Q = (m1 + m2) - (m3 + m1)
-    numerator = 2 * m1 * (T_1 + Q - E_x)
+    numerator = 2 * m1 * (T_i + Q - E_x)
     denominator = m3 * (m3 + m1)
-    #print("+++++++++++++++++++++++++",numerator, denominator)
     v3 = math.sqrt(abs(numerator) / abs(denominator))
     return v3
